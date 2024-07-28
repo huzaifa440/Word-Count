@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Counter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background-color: #001f3f;
+            color: white;
+        }
+
+        h1 {
+            text-align: center;
+            color: #FFD700;
+        }
+
+        #textarea {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            box-sizing: border-box;
+            resize: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #333;
+            color: white;
+        }
+
+        #word-count, #char-count {
+            font-weight: bold;
+        }
+
+        #clear-button {
+            margin-top: 10px;
+            background-color: #005f99;
+            color: white;
+            border: none;
+            padding: 5px 30px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #clear-button:hover {
+            background-color: #004080;
+        }
+
+        #density {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .density-box {
+            padding: 5px;
+            margin: 5px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        #output-details {
+            width: 30%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .density-box:nth-child(odd) {
+            background-color: #004a86;
+        }
+
+        .density-box:nth-child(even) {
+            background-color: #398f00;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Word Counter</h1>
+    <textarea id="textarea" placeholder="Paste your text here"></textarea>
+    <div id="output-details">
+        <p>Words: <span id="word-count">0</span></p>
+        <p>Characters: <span id="char-count">0</span></p>
+        <button id="clear-button">Clear</button>
+    </div>
+    
+    <div id="density"></div>
+
+    <script>
+        document.getElementById('textarea').addEventListener('input', function() {
+            const text = this.value.trim();
+            const words = text.split(/\s+/).filter(word => word.length > 0);
+            const characters = text.length;
+
+            document.getElementById('word-count').textContent = words.length;
+            document.getElementById('char-count').textContent = characters;
+
+            const wordFrequency = {};
+            words.forEach(word => {
+                word = word.toLowerCase();
+                wordFrequency[word] = (wordFrequency[word] || 0) + 1;
+            });
+
+            let densityHtml = '';
+            const totalWords = words.length;
+            for (const [word, count] of Object.entries(wordFrequency)) {
+                const percentage = ((count / totalWords) * 100).toFixed(2);
+                densityHtml += `<div class="density-box">${word}: ${percentage}%</div>`;
+            }
+
+            document.getElementById('density').innerHTML = densityHtml;
+        });
+
+        document.getElementById('clear-button').addEventListener('click', function() {
+            document.getElementById('textarea').value = '';
+            document.getElementById('word-count').textContent = '0';
+            document.getElementById('char-count').textContent = '0';
+            document.getElementById('density').innerHTML = '';
+        });
+    </script>
+    
+</body>
+</html>
